@@ -150,7 +150,7 @@
           status.textContent = 'auth failed — check server DEMO_MODE setting';
         }
         console.error('token fetch failed:', err);
-        return;
+        throw err;
       }
 
       const health = await fetch('/healthz').then((r) => r.json()).catch(() => ({}));
