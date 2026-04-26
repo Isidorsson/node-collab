@@ -1,0 +1,38 @@
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - '6379:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 2s
+      timeout: 2s
+      retries: 10
+
+  node-a:
+    build: .
+    environment:
+      JWT_SECRET: dev-secret-do-not-use-in-prod
+      REDIS_URL: redis://redis:6379
+      PORT: 3001
+      INSTANCE_ID: instance-a
+      NODE_ENV: development
+    depends_on:
+      redis:
+        condition: service_healthy
+    ports:
+      - '3001:3001'
+
+  node-b:
+    build: .
+    environment:
+      JWT_SECRET: dev-secret-do-not-use-in-prod
+      REDIS_URL: redis://redis:6379
+      PORT: 3002
+      INSTANCE_ID: instance-b
+      NODE_ENV: development
+    depends_on:
+      redis:
+        condition: service_healthy
+    ports:
+      - '3002:3002'
