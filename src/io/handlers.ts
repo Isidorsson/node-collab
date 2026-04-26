@@ -1,5 +1,5 @@
 import type { Server as IOServer, Socket } from 'socket.io';
-import type Redis from 'ioredis';
+import type { Redis } from 'ioredis';
 import type { Logger } from '../obs/logger.js';
 import type { Env } from '../config/env.js';
 import { ChatPayload, CursorPayload, EVENTS, JoinPayload } from './protocol.js';

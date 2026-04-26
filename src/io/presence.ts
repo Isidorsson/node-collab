@@ -1,4 +1,4 @@
-import type Redis from 'ioredis';
+import type { Redis } from 'ioredis';
 import type { PresenceEntry } from './protocol.js';
 
 const TTL_SECONDS = 60;

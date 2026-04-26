@@ -32,10 +32,11 @@ function parseArgs(): Args {
   for (const a of process.argv.slice(2)) {
     const m = a.match(/^--(\w+)=(.+)$/);
     if (!m) continue;
-    const [, k, v] = m;
-    if (k === 'url' || k === 'room') (out as Record<string, string>)[k] = v!;
-    else if (k === 'fast' || k === 'slow' || k === 'duration')
-      (out as Record<string, number>)[k] = Number(v);
+    const k = m[1];
+    const v = m[2];
+    if (!k || v === undefined) continue;
+    if (k === 'url' || k === 'room') out[k] = v;
+    else if (k === 'fast' || k === 'slow' || k === 'duration') out[k] = Number(v);
   }
   return out;
 }

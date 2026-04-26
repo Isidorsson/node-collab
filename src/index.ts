@@ -1,7 +1,7 @@
 import { createServer } from 'node:http';
 import { Server as IOServer } from 'socket.io';
 import { createAdapter } from '@socket.io/redis-adapter';
-import Redis from 'ioredis';
+import { Redis } from 'ioredis';
 import { loadEnv } from './config/env.js';
 import { createLogger } from './obs/logger.js';
 import { createHttpApp } from './app.js';
@@ -19,9 +19,9 @@ async function main(): Promise<void> {
   const subClient = pubClient.duplicate();
   const presenceClient = pubClient.duplicate();
 
-  pubClient.on('error', (err) => logger.error({ err }, 'redis pub error'));
-  subClient.on('error', (err) => logger.error({ err }, 'redis sub error'));
-  presenceClient.on('error', (err) => logger.error({ err }, 'redis presence error'));
+  pubClient.on('error', (err: Error) => logger.error({ err }, 'redis pub error'));
+  subClient.on('error', (err: Error) => logger.error({ err }, 'redis sub error'));
+  presenceClient.on('error', (err: Error) => logger.error({ err }, 'redis presence error'));
 
   await Promise.all([pubClient.connect(), subClient.connect(), presenceClient.connect()]);
   logger.info({ url: env.REDIS_URL }, 'redis connected');

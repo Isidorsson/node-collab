@@ -1,5 +1,5 @@
 import express, { type Express } from 'express';
-import pinoHttp from 'pino-http';
+import { pinoHttp } from 'pino-http';
 import type { Env } from './config/env.js';
 import type { Logger } from './obs/logger.js';
 import { registry } from './obs/metrics.js';
