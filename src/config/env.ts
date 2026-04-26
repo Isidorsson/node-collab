@@ -14,6 +14,19 @@ const EnvSchema = z.object({
   INSTANCE_ID: z.string().default('instance-1'),
   SLOW_CLIENT_QUEUE_LIMIT: z.coerce.number().int().positive().default(64),
   SLOW_CLIENT_DISCONNECT_AFTER_MS: z.coerce.number().int().positive().default(2000),
+  /**
+   * Opt-in flag that enables the unauthenticated `/dev/token` endpoint, used
+   * by the bundled demo page to mint a JWT without an auth flow. Default OFF
+   * for secure-by-default. Set `DEMO_MODE=true` to enable on portfolio /
+   * showcase deployments. Never enable on a real production service.
+   *
+   * In local development this defaults to ON via the auto-rule below
+   * (NODE_ENV=development → DEMO_MODE=true), so `npm run dev` just works.
+   */
+  DEMO_MODE: z
+    .union([z.boolean(), z.string()])
+    .optional()
+    .transform((v) => v === true || v === 'true' || v === '1'),
 });
 
 export type Env = z.infer<typeof EnvSchema>;
@@ -26,5 +39,13 @@ export function loadEnv(): Env {
       .join('\n');
     throw new Error(`Invalid environment configuration:\n${issues}`);
   }
-  return parsed.data;
+
+  const env = parsed.data;
+
+  // Convenience: auto-enable DEMO_MODE in local dev when not explicitly set.
+  // Production must opt in by setting DEMO_MODE=true explicitly.
+  if (env.NODE_ENV === 'development' && process.env['DEMO_MODE'] === undefined) {
+    return { ...env, DEMO_MODE: true };
+  }
+  return env;
 }

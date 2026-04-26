@@ -75,6 +75,11 @@ async function main(): Promise<void> {
       { port: env.PORT, instance: env.INSTANCE_ID, mode: redisClients ? 'redis' : 'memory' },
       'node-collab listening',
     );
+    if (env.DEMO_MODE && env.NODE_ENV === 'production') {
+      logger.warn(
+        'DEMO_MODE is enabled in production — /dev/token mints unauthenticated JWTs. Acceptable for portfolio demos, NEVER for a real service.',
+      );
+    }
   });
 
   let shuttingDown = false;

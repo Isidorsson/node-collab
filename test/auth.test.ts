@@ -11,6 +11,7 @@ const env = {
   INSTANCE_ID: 'test',
   SLOW_CLIENT_QUEUE_LIMIT: 64,
   SLOW_CLIENT_DISCONNECT_AFTER_MS: 2000,
+  DEMO_MODE: false,
 } as const;
 
 describe('signDevToken', () => {

@@ -30,9 +30,11 @@ export function createHttpApp(ctx: HttpContext): Express {
     res.send(await registry.metrics());
   });
 
-  // Dev helper: mint a JWT so the demo page can connect without an auth UI.
-  // Disabled in production — set up a real auth flow before going live.
-  if (ctx.env.NODE_ENV !== 'production') {
+  // Demo helper: mint a JWT so the bundled demo page can connect without an
+  // auth UI. Gated behind DEMO_MODE — must be opted into explicitly in
+  // production. Auto-enabled in local dev. Never expose this on a real
+  // service; set up a proper auth flow instead.
+  if (ctx.env.DEMO_MODE) {
     app.get('/dev/token', (req, res) => {
       const sub = String(req.query.sub ?? `user-${Math.random().toString(36).slice(2, 8)}`);
       const name = typeof req.query.name === 'string' ? req.query.name : undefined;

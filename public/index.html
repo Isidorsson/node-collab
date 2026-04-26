@@ -124,8 +124,24 @@
       const name = params.get('name') ?? `user-${Math.random().toString(36).slice(2, 6)}`;
       document.getElementById('room-label').textContent = room;
 
-      const tokenRes = await fetch(`/dev/token?sub=${encodeURIComponent(name)}&name=${encodeURIComponent(name)}`);
-      const { token } = await tokenRes.json();
+      const status = document.getElementById('status');
+      let token;
+      try {
+        const tokenRes = await fetch(
+          `/dev/token?sub=${encodeURIComponent(name)}&name=${encodeURIComponent(name)}`,
+        );
+        if (!tokenRes.ok) {
+          status.textContent = `auth disabled (HTTP ${tokenRes.status}) — set DEMO_MODE=true on the server`;
+          throw new Error(`token endpoint returned ${tokenRes.status}`);
+        }
+        token = (await tokenRes.json()).token;
+      } catch (err) {
+        if (status.textContent === 'connecting…') {
+          status.textContent = 'auth failed — check server DEMO_MODE setting';
+        }
+        console.error('token fetch failed:', err);
+        return;
+      }
 
       const health = await fetch('/healthz').then((r) => r.json()).catch(() => ({}));
       document.getElementById('instance-label').textContent = health.instance ?? '?';
@@ -133,7 +149,6 @@
       const socket = io({ auth: { token } });
       const board = document.getElementById('board');
       const log = document.getElementById('log');
-      const status = document.getElementById('status');
       const presenceLabel = document.getElementById('presence-label');
       const cursors = new Map();
       let myId = name;
