@@ -1,10 +1,9 @@
 import type { Server as IOServer, Socket } from 'socket.io';
-import type { Redis } from 'ioredis';
 import type { Logger } from '../obs/logger.js';
 import type { Env } from '../config/env.js';
 import { ChatPayload, CursorPayload, EVENTS, JoinPayload } from './protocol.js';
 import { attachSlowClientWatcher } from './slow_client.js';
-import { joinPresence, leavePresence, listPresence } from './presence.js';
+import type { PresenceStore } from './presence.js';
 import {
   activeRooms,
   activeSockets,
@@ -14,13 +13,13 @@ import {
 
 export interface RegisterOptions {
   io: IOServer;
-  redis: Redis;
+  presence: PresenceStore;
   env: Env;
   logger: Logger;
 }
 
 export function registerSocketHandlers(opts: RegisterOptions): void {
-  const { io, redis, env, logger } = opts;
+  const { io, presence, env, logger } = opts;
   const joinedRooms = new Map<string, Set<string>>();
 
   io.on('connection', (socket) => {
@@ -53,7 +52,7 @@ export function registerSocketHandlers(opts: RegisterOptions): void {
         name: socket.user.name,
         joinedAt: Date.now(),
       };
-      const present = await joinPresence(redis, room, entry);
+      const present = await presence.join(room, entry);
       io.to(room).emit(EVENTS.presence, { room, present });
       messagesPublished.inc({ instance: env.INSTANCE_ID, channel: 'presence' });
       ack?.(true);
@@ -118,16 +117,16 @@ export function registerSocketHandlers(opts: RegisterOptions): void {
         }
       }
 
-      const present = await leavePresence(redis, room, s.user.sub);
+      const present = await presence.leave(room, s.user.sub);
       io.to(room).emit(EVENTS.presence, { room, present });
       messagesPublished.inc({ instance: env.INSTANCE_ID, channel: 'presence' });
     }
   });
 
-  // Refresh presence TTL for any local rooms periodically.
+  // Refresh presence TTL for any local rooms periodically (no-op in memory mode).
   const refresh = setInterval(async () => {
     const rooms = Array.from(joinedRooms.keys());
-    await Promise.all(rooms.map(async (r) => listPresence(redis, r).catch(() => undefined)));
+    await Promise.all(rooms.map((r) => presence.refresh(r).catch(() => undefined)));
   }, 30_000);
   refresh.unref();
 }

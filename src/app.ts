@@ -17,7 +17,12 @@ export function createHttpApp(ctx: HttpContext): Express {
   app.use(pinoHttp({ logger: ctx.logger }));
 
   app.get('/healthz', (_req, res) => {
-    res.json({ status: 'ok', service: 'node-collab', instance: ctx.env.INSTANCE_ID });
+    res.json({
+      status: 'ok',
+      service: 'node-collab',
+      instance: ctx.env.INSTANCE_ID,
+      mode: ctx.env.REDIS_URL ? 'redis' : 'memory',
+    });
   });
 
   app.get('/metrics', async (_req, res) => {

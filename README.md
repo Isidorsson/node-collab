@@ -4,7 +4,10 @@ Express + Socket.IO + Redis pub/sub real-time service. **Node twin of [collab-bo
 
 ## What it does
 
-A multi-room collaborative server: shared cursors + chat with live presence. Two server replicas share traffic via the Socket.IO Redis adapter — a message published on instance A is delivered to clients connected to instance B.
+A multi-room collaborative server: shared cursors + chat with live presence. Two operating modes:
+
+- **Redis mode** (when `REDIS_URL` is set): multiple replicas share traffic via the Socket.IO Redis adapter — a message published on instance A is delivered to clients connected to instance B. Presence is stored in Redis hashes with TTL.
+- **Memory mode** (when `REDIS_URL` is unset): single-instance only, in-memory presence. Useful for local dev and minimal deployments. Detected automatically — `/healthz` reports the active mode.
 
 | Concern | collab-board (Go) | node-collab (Node) |
 |---|---|---|
