@@ -117,7 +117,17 @@
       <button id="send">Send</button>
     </footer>
     <script type="module">
-      import { io } from 'https://cdn.socket.io/4.8.1/socket.io.esm.min.js';
+      // esm.sh wraps the npm package as a real ESM module with a named `io` export.
+      // The official cdn.socket.io ESM build doesn't always expose `io` as a named
+      // export and fails silently when imported this way.
+      let io;
+      try {
+        ({ io } = await import('https://esm.sh/socket.io-client@4.8.1'));
+      } catch (err) {
+        document.getElementById('status').textContent = 'failed to load socket.io client';
+        console.error('socket.io import failed:', err);
+        throw err;
+      }
 
       const params = new URLSearchParams(location.search);
       const room = params.get('room') ?? 'lobby';
