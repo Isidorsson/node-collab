@@ -9,13 +9,14 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npm run build && npm prune --omit=dev
 
-FROM gcr.io/distroless/nodejs22-debian12 AS runtime
+FROM node:22-alpine AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/dist ./dist
-COPY --from=build /app/package.json ./package.json
-COPY --from=build /app/public ./public
-USER nonroot
+RUN addgroup -S app && adduser -S app -G app
+COPY --from=build --chown=app:app /app/node_modules ./node_modules
+COPY --from=build --chown=app:app /app/dist ./dist
+COPY --from=build --chown=app:app /app/package.json ./package.json
+COPY --from=build --chown=app:app /app/public ./public
+USER app
 EXPOSE 3001
-CMD ["dist/index.js"]
+CMD ["node", "dist/index.js"]
