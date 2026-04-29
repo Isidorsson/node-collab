@@ -1,0 +1,63 @@
+<div class="shell">
+  <aside class="rail" aria-label="Primary navigation">
+    <a routerLink="/" class="rail__brand" aria-label="node-collab home">
+      <span class="rail__brand-mark" aria-hidden="true">
+        <span class="rail__brand-dot rail__brand-dot--a"></span>
+        <span class="rail__brand-line"></span>
+        <span class="rail__brand-dot rail__brand-dot--b"></span>
+      </span>
+      <span class="rail__brand-text">
+        <em>node</em><span>·collab</span>
+      </span>
+    </a>
+
+    <nav class="rail__nav" aria-label="Sections">
+      <a routerLink="/" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">
+        <span class="rail__index">01</span>
+        <span class="rail__label">lobby</span>
+      </a>
+      <a routerLink="/r/observatory" routerLinkActive="is-active">
+        <span class="rail__index">02</span>
+        <span class="rail__label">room</span>
+      </a>
+      <a routerLink="/about" routerLinkActive="is-active">
+        <span class="rail__index">03</span>
+        <span class="rail__label">architecture</span>
+      </a>
+    </nav>
+
+    <div class="rail__spacer"></div>
+
+    <button
+      type="button"
+      class="rail__theme"
+      (click)="toggleTheme()"
+      [attr.aria-label]="'switch to ' + (theme() === 'dark' ? 'light' : 'dark') + ' theme'"
+    >
+      <span class="rail__theme-dot" [class.is-on]="theme() === 'dark'"></span>
+      <span class="rail__theme-label">{{ theme() === 'dark' ? 'dim' : 'lit' }}</span>
+    </button>
+
+    <footer class="rail__foot">
+      <div class="rail__foot-line">
+        <span class="eyebrow"><span class="tick">▸</span> session</span>
+      </div>
+      <div class="rail__foot-tape tape">{{ bootedAt }} UTC</div>
+      <div class="rail__foot-tape tape">build · 0.1.0</div>
+    </footer>
+  </aside>
+
+  <main class="canvas">
+    <header class="topbar">
+      <div class="topbar__title">
+        <span class="eyebrow"><span class="tick">▸</span> 00 / observatory</span>
+        <h1 class="serif">a real-time collaboration probe.</h1>
+      </div>
+      <nc-telemetry-tape class="topbar__tape" />
+    </header>
+
+    <section class="content">
+      <ng-content />
+    </section>
+  </main>
+</div>

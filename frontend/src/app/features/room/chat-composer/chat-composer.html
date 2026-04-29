@@ -1,0 +1,18 @@
+<form class="composer" (submit)="$event.preventDefault(); send()">
+  <span class="composer__prompt eyebrow">▸ say</span>
+  <input
+    type="text"
+    autocomplete="off"
+    spellcheck="false"
+    aria-label="Send a chat message"
+    [maxlength]="2000"
+    [ngModel]="draft()"
+    (ngModelChange)="onInput($event)"
+    (keydown.enter)="onEnter($event)"
+    placeholder="press a key. someone, somewhere, will see it."
+  />
+  <span class="composer__count tape" [class.is-low]="remaining() < 100">
+    {{ remaining() }}
+  </span>
+  <button type="submit" class="primary" [disabled]="!draft().trim()">send</button>
+</form>

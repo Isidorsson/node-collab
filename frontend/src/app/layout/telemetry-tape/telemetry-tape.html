@@ -1,0 +1,12 @@
+<div class="tape-strip" role="status" aria-live="polite" aria-label="Live system telemetry">
+  <span class="tape-strip__lead" aria-hidden="true">
+    <span class="tape-strip__pulse"></span>
+    LIVE
+  </span>
+  @for (f of frames(); track f.label) {
+    <span class="tape-strip__frame" [attr.data-tone]="f.tone">
+      <span class="tape-strip__label">{{ f.label }}</span>
+      <span class="tape-strip__value">{{ f.value }}</span>
+    </span>
+  }
+</div>

@@ -1,0 +1,130 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+
+.chat {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 12px;
+  min-height: 0;
+  flex: 1;
+}
+
+.chat__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.chat__count {
+  font-feature-settings: 'tnum';
+  color: var(--accent);
+  font-size: 11px;
+}
+
+.chat__log {
+  overflow-y: auto;
+  padding-right: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  scrollbar-color: var(--rule-strong) transparent;
+  scrollbar-width: thin;
+}
+.chat__log::-webkit-scrollbar {
+  width: 6px;
+}
+.chat__log::-webkit-scrollbar-track {
+  background: transparent;
+}
+.chat__log::-webkit-scrollbar-thumb {
+  background: var(--rule-strong);
+  border-radius: 3px;
+}
+
+.chat__empty {
+  text-align: center;
+  margin: 32px 0;
+  color: var(--muted);
+  font-size: 22px;
+  letter-spacing: 0.04em;
+}
+
+/* ---------------------------- message ---------------------------- */
+.chat__msg {
+  --msg-hue: 200;
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px 10px 14px;
+  border-left: 2px solid hsl(var(--msg-hue), 70%, 60%);
+  background: var(--bg-elev);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  animation: chat-arrive 220ms cubic-bezier(0.18, 0.8, 0.2, 1) backwards;
+}
+.chat__msg.is-mine {
+  border-left: none;
+  border-right: 2px solid var(--accent);
+  background: var(--bg-elev-2);
+  border-radius: var(--radius) 0 0 var(--radius);
+  text-align: right;
+}
+
+@keyframes chat-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+    clip-path: inset(0 100% 0 0);
+  }
+  60% {
+    clip-path: inset(0 0 0 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.chat__msg-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: var(--font-mono);
+}
+.is-mine .chat__msg-meta {
+  justify-content: flex-end;
+}
+
+.chat__msg-name {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: hsl(var(--msg-hue), 70%, 70%);
+  font-weight: 500;
+}
+[data-theme='light'] .chat__msg-name {
+  color: hsl(var(--msg-hue), 60%, 28%);
+}
+.is-mine .chat__msg-name {
+  color: var(--accent);
+}
+
+.chat__msg-time {
+  font-size: 9px;
+  color: var(--muted);
+}
+
+.chat__msg-body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text);
+  word-break: break-word;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat__msg {
+    animation: none;
+  }
+}

@@ -1,0 +1,28 @@
+<div class="presence">
+  <header class="presence__head">
+    <span class="eyebrow"><span class="tick">▸</span> 03 / present</span>
+    <span class="presence__count tape">{{ sorted().length }}</span>
+  </header>
+  <ul class="presence__list">
+    @for (e of sorted(); track e.userId) {
+      <li class="presence__row" [class.is-me]="e.userId === meId()">
+        <span
+          class="presence__avatar"
+          [style.--avatar-hue]="hue(e.userId)"
+          aria-hidden="true"
+        >
+          {{ (e.name ?? e.userId).slice(0, 2) }}
+        </span>
+        <span class="presence__id">
+          {{ e.name ?? e.userId }}
+          @if (e.userId === meId()) {
+            <span class="presence__me">· you</span>
+          }
+        </span>
+        <span class="presence__time tape">{{ joinedAgo(e.joinedAt) }}</span>
+      </li>
+    } @empty {
+      <li class="presence__empty">no one here yet — open another tab.</li>
+    }
+  </ul>
+</div>

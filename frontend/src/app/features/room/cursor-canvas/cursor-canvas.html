@@ -1,0 +1,45 @@
+<div
+  #board
+  class="board"
+  (pointermove)="onPointerMove($event)"
+  role="application"
+  aria-label="Live cursor canvas — move your mouse to broadcast position"
+>
+  <!-- decorative axes & callouts; pure CSS, just for atmosphere -->
+  <div class="board__axis board__axis--top">
+    <span class="board__axis-tick">000</span>
+    <span class="board__axis-tick">256</span>
+    <span class="board__axis-tick">512</span>
+    <span class="board__axis-tick">768</span>
+    <span class="board__axis-tick">∞</span>
+  </div>
+  <div class="board__axis board__axis--left">
+    <span class="board__axis-tick">000</span>
+    <span class="board__axis-tick">256</span>
+    <span class="board__axis-tick">512</span>
+    <span class="board__axis-tick">∞</span>
+  </div>
+  <div class="board__centerline" aria-hidden="true"></div>
+  <div class="board__corner board__corner--tl"></div>
+  <div class="board__corner board__corner--tr"></div>
+  <div class="board__corner board__corner--bl"></div>
+  <div class="board__corner board__corner--br"></div>
+
+  <p class="board__hint">
+    <span class="serif">move.</span>
+    <span>cursor packets travel through redis pub/sub.</span>
+  </p>
+
+  @for (c of cursors(); track c.userId) {
+    <div
+      class="board__cursor"
+      [style.transform]="'translate3d(' + c.x + 'px, ' + c.y + 'px, 0)'"
+      [style.--cursor-hue]="c.hue"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="board__cursor-icon">
+        <path d="M3 2 L21 11 L13 13 L11 21 Z" />
+      </svg>
+      <span class="board__cursor-label">{{ c.userId }}</span>
+    </div>
+  }
+</div>

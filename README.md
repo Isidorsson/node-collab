@@ -1,10 +1,10 @@
 # node-collab
 
-Express + Socket.IO + Redis pub/sub real-time service. **Node twin of [collab-board](../../GoLang/collab-board)** — same problem domain, deliberately so. The point is to show I solved this problem in two ecosystems and to compare the trade-offs.
+Express + Socket.IO + Redis pub/sub real-time service, with an Angular 20 frontend that consumes it. **Node twin of [collab-board](../../GoLang/collab-board)** — same problem domain, deliberately so. The point is to show I solved this problem in two ecosystems and to compare the trade-offs.
 
 ## What it does
 
-A multi-room collaborative server: shared cursors + chat with live presence. Two operating modes:
+A multi-room collaborative app: shared cursors + chat with live presence, served as an Angular 20 single-page app from the same Express process that hosts the Socket.IO endpoint. Two operating modes:
 
 - **Redis mode** (when `REDIS_URL` is set): multiple replicas share traffic via the Socket.IO Redis adapter — a message published on instance A is delivered to clients connected to instance B. Presence is stored in Redis hashes with TTL.
 - **Memory mode** (when `REDIS_URL` is unset): single-instance only, in-memory presence. Useful for local dev and minimal deployments. Detected automatically — `/healthz` reports the active mode.
@@ -35,27 +35,63 @@ HTTP:
 - `GET /metrics` — Prometheus text format
 - `GET /dev/token?sub=…&name=…` — dev-only, mints a JWT (disabled in production)
 
-## Local dev — single process
+## Repo layout
+
+```
+node-collab/
+├── src/                  # Express + Socket.IO + Redis backend
+├── frontend/             # Angular 20 SPA (standalone components, signals)
+│   └── src/app/
+│       ├── core/         # AuthService, HealthService, CollabService, ThemeService, TelemetryService
+│       ├── layout/       # Shell + telemetry-tape signature element
+│       └── features/     # home (lobby), room (canvas+chat+presence), about (architecture)
+├── public/browser/       # build artifact: Angular bundle (gitignored)
+└── Dockerfile            # multi-stage: frontend → backend → runtime
+```
+
+The Angular app lives at the same origin as the API (no CORS), shares the
+wire-protocol type definitions with the backend (`src/io/protocol.ts` ↔
+`frontend/src/app/core/collab/protocol.ts`), and is built into
+`public/browser/` — Express serves the bundle and falls back to `index.html`
+for any unknown SPA route.
+
+## Local dev — two processes
 
 ```bash
 docker compose up -d redis
 cp .env.example .env
+
+# terminal 1 — backend on :3001
 npm install
-npm run dev                   # http://localhost:3001
+npm run dev
+
+# terminal 2 — Angular dev server on :4200, proxies /socket.io + /dev/* + /healthz
+npm run dev:frontend
 ```
 
-Open `http://localhost:3001/?room=lobby` in two browsers. Move the mouse, type a message — both browsers see each other live.
+Open `http://localhost:4200/` and pick a room (or jump straight to
+`http://localhost:4200/r/observatory`). Open a second tab — move the mouse,
+type a message — both tabs see each other live.
+
+## Local dev — single process
+
+```bash
+docker compose up -d redis
+npm run build:frontend     # emits public/browser/*
+npm run dev                # http://localhost:3001 — serves SPA + API
+```
 
 ## Local dev — two replicas (the headline demo)
 
 ```bash
+npm run build:frontend          # build the SPA once
 docker compose up               # redis + node-a + node-b
 ```
 
 - `http://localhost:3001/` is served by `instance-a`
 - `http://localhost:3002/` is served by `instance-b`
 
-Open both. Each browser connects to a different replica. Send a chat message — it travels through Redis and lands on the other replica's clients. Check `/healthz` on each port to confirm the `instance` field differs.
+Open both. Each browser connects to a different replica — visible in the SPA's "telemetry tape" header. Send a chat message — it travels through Redis and lands on the other replica's clients. Check `/healthz` on each port to confirm the `instance` field differs.
 
 ## Load test
 
@@ -96,11 +132,12 @@ client B ────────│  Socket.IO  ←──── handlers ──
 
 ## Where to extend
 
-Three TODO blocks mark the design decisions worth experimenting with:
+Four TODO blocks mark the design decisions worth experimenting with:
 
 - `src/io/auth.ts` — what to do when a JWT expires mid-session (force-disconnect vs grace-period refresh)
 - `src/io/slow_client.ts` — how to detect slow clients (transport-stalled vs ack-timeout)
 - `src/obs/metrics.ts` — already has reasonable defaults, but you may want per-room cardinality once you understand your traffic shape
+- `frontend/src/app/features/room/cursor-canvas/cursor-throttle.ts` — outbound cursor emit cadence (rAF vs time-based vs hybrid). Trades smoothness for backend pressure.
 
 ## License
 

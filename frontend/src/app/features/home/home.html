@@ -1,0 +1,84 @@
+<div class="lobby">
+  <section class="lobby__intro">
+    <p class="eyebrow"><span class="tick">▸</span> 01 / lobby</p>
+    <h2 class="serif">
+      pick a room.<br />
+      whisper. wave.<br />
+      <span class="lobby__intro-tail">watch a packet travel.</span>
+    </h2>
+    <p class="lobby__copy">
+      Two replicas behind a Redis pub/sub bus. Open this page in a second tab —
+      that tab might be served by a different instance, but a chat line still
+      lands in milliseconds because the message hops through Redis. The header
+      tape shows which instance you're talking to.
+    </p>
+
+    <ul class="lobby__pills tape">
+      <li><span class="lobby__pills-tick">▸</span> express · socket.io · redis adapter</li>
+      <li><span class="lobby__pills-tick">▸</span> jwt handshake · zod-validated payloads</li>
+      <li><span class="lobby__pills-tick">▸</span> prom metrics · slow-client eviction</li>
+    </ul>
+  </section>
+
+  <section class="lobby__form" aria-labelledby="enter-heading">
+    <h3 id="enter-heading" class="eyebrow"><span class="tick">▸</span> 02 / enter</h3>
+
+    <div class="lobby__field">
+      <label for="display-name" class="lobby__field-label">display name</label>
+      <input
+        id="display-name"
+        type="text"
+        autocomplete="off"
+        spellcheck="false"
+        [ngModel]="nameDraft()"
+        (ngModelChange)="nameDraft.set($event)"
+        placeholder="user-1f3a"
+      />
+    </div>
+
+    <div class="lobby__field">
+      <label for="room-id" class="lobby__field-label">room</label>
+      <input
+        id="room-id"
+        type="text"
+        autocomplete="off"
+        spellcheck="false"
+        [ngModel]="roomDraft()"
+        (ngModelChange)="roomDraft.set($event); errorMsg.set(null)"
+        (keydown.enter)="enter()"
+        placeholder="observatory"
+      />
+    </div>
+
+    @if (errorMsg(); as msg) {
+      <p class="lobby__error" role="alert">! {{ msg }}</p>
+    }
+
+    <div class="lobby__actions">
+      <button type="button" class="primary" (click)="enter()" [disabled]="!canEnter()">
+        open channel ↗
+      </button>
+      <span class="lobby__hint">↵ enter</span>
+    </div>
+
+    <div class="lobby__suggested">
+      <p class="eyebrow lobby__suggested-title"><span class="tick">▸</span> suggested rooms</p>
+      <ul class="lobby__suggested-grid">
+        @for (room of suggested; track room.id) {
+          <li>
+            <button
+              type="button"
+              class="lobby__suggested-card"
+              (click)="pickSuggested(room.id)"
+              [class.is-active]="room.id === roomDraft()"
+            >
+              <span class="lobby__suggested-num">{{ room.badge }}</span>
+              <span class="lobby__suggested-id">{{ room.id }}</span>
+              <span class="lobby__suggested-blurb">{{ room.blurb }}</span>
+            </button>
+          </li>
+        }
+      </ul>
+    </div>
+  </section>
+</div>

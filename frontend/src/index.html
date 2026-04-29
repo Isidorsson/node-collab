@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>node-collab · observatory</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#0a0b0d" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f4ecda" media="(prefers-color-scheme: light)" />
+    <meta
+      name="description"
+      content="node-collab — multi-replica realtime cursors, chat and presence over Socket.IO and Redis pub/sub."
+    />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap"
+    />
+  </head>
+  <body>
+    <nc-root>
+      <!-- pre-hydration boot frame; replaced once Angular takes over -->
+      <div class="app-boot" role="status" aria-live="polite">
+        <div class="app-boot__rail">
+          <span class="app-boot__tick">▸ 00</span>
+          <span class="app-boot__label">handshake</span>
+          <span class="app-boot__sep">·</span>
+          <span class="app-boot__sweep"></span>
+          <span class="app-boot__sep">·</span>
+          <span class="app-boot__label">presence</span>
+          <span class="app-boot__sep">·</span>
+          <span class="app-boot__label">cursor.bus</span>
+        </div>
+        <em class="app-boot__title">node-collab</em>
+        <span class="app-boot__sub">opening socket</span>
+      </div>
+    </nc-root>
+  </body>
+</html>

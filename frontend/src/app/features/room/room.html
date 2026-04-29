@@ -1,0 +1,44 @@
+<div class="room">
+  <header class="room__head">
+    <div class="room__head-id">
+      <span class="eyebrow"><span class="tick">▸</span> live · room</span>
+      <h2 class="serif">{{ room() }}</h2>
+    </div>
+    <div class="room__head-meta">
+      <nc-connection-pill [state]="connection()" />
+      <button type="button" (click)="leave()" class="room__leave">
+        <span aria-hidden="true">←</span> leave
+      </button>
+    </div>
+  </header>
+
+  @if (initError(); as err) {
+    <div class="room__error" role="alert">
+      <span class="eyebrow"><span class="tick">!</span> handshake</span>
+      <p>{{ err }}</p>
+      <p class="room__error-hint">
+        is <code>DEMO_MODE=true</code> on the backend? the JWT is minted at
+        <code>/dev/token</code>; without it the socket cannot authenticate.
+      </p>
+    </div>
+  }
+
+  <div class="room__layout">
+    <section class="room__canvas">
+      <nc-cursor-canvas />
+    </section>
+
+    <aside class="room__side">
+      <div class="room__side-block">
+        <nc-presence-list [entries]="presence()" [meId]="userId()" />
+      </div>
+      <div class="room__side-rule" aria-hidden="true"></div>
+      <div class="room__side-block room__side-block--chat">
+        <nc-chat-log [meId]="userId()" />
+      </div>
+      <div class="room__side-composer">
+        <nc-chat-composer />
+      </div>
+    </aside>
+  </div>
+</div>

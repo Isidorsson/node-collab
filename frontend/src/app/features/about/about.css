@@ -1,0 +1,157 @@
+:host {
+  display: block;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.about {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 56px 56px 80px;
+  display: grid;
+  gap: 36px;
+}
+
+.about__head {
+  display: grid;
+  gap: 8px;
+}
+.about__head h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(40px, 5vw, 72px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--bone);
+}
+
+.about__intro {
+  display: grid;
+  gap: 12px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-dim);
+  max-width: 60ch;
+}
+.about__intro em.serif {
+  color: var(--bone);
+  font-size: 16px;
+}
+.about__intro code {
+  background: var(--bg-elev-2);
+  padding: 0 6px;
+  border-radius: 2px;
+  color: var(--accent);
+  font-size: 12px;
+  font-family: var(--font-mono);
+}
+
+.about__diagram {
+  background: var(--bg-elev);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 18px;
+  position: relative;
+  overflow-x: auto;
+}
+.about__diagram::before {
+  content: '── ARCHITECTURE.txt ──';
+  position: absolute;
+  top: -10px;
+  left: 18px;
+  background: var(--bg);
+  padding: 2px 8px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.about__pre {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--text-dim);
+  white-space: pre;
+}
+
+.about__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.about__card {
+  border: 1px solid var(--rule);
+  background: var(--bg-elev);
+  border-radius: var(--radius);
+  padding: 18px 18px 16px;
+  display: grid;
+  gap: 8px;
+  position: relative;
+  transition:
+    border-color 200ms ease,
+    transform 200ms ease;
+}
+.about__card:hover {
+  border-color: var(--rule-strong);
+  transform: translateY(-2px);
+}
+.about__card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: var(--radius);
+  pointer-events: none;
+  background: linear-gradient(135deg, transparent 70%, var(--accent-soft) 100%);
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+.about__card:hover::before {
+  opacity: 1;
+}
+.about__card h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.1;
+  color: var(--bone);
+  letter-spacing: -0.01em;
+}
+.about__card p:not(.eyebrow) {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+.about__card code {
+  background: var(--bg);
+  padding: 0 4px;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--cyan);
+}
+
+.about__foot {
+  margin-top: 8px;
+  padding: 12px 14px;
+  border: 1px dashed var(--rule-strong);
+  border-radius: var(--radius);
+  color: var(--text-dim);
+  font-size: 11px;
+  text-align: center;
+}
+
+@media (max-width: 880px) {
+  .about {
+    padding: 32px 22px 60px;
+  }
+}

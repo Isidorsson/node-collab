@@ -1,0 +1,6 @@
+# Angular workspace
+/dist
+/.angular
+/node_modules
+/coverage
+*.tsbuildinfo

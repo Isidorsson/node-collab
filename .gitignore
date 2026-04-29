@@ -7,3 +7,8 @@ coverage/
 .DS_Store
 .idea/
 .vscode/
+
+# Angular build output — produced from frontend/ at build time
+public/browser/
+frontend/.angular/
+frontend/dist/

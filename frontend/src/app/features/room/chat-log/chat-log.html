@@ -1,0 +1,20 @@
+<section class="chat" aria-labelledby="chat-heading">
+  <header class="chat__head">
+    <span id="chat-heading" class="eyebrow"><span class="tick">▸</span> 04 / chat</span>
+    <span class="chat__count tape">{{ messages().length.toString().padStart(3, '0') }}</span>
+  </header>
+
+  <div #log class="chat__log" role="log" aria-live="polite" aria-relevant="additions">
+    @for (m of messages(); track m.at + m.userId) {
+      <article class="chat__msg" [class.is-mine]="m.mine" [style.--msg-hue]="m.hue">
+        <header class="chat__msg-meta">
+          <span class="chat__msg-name">{{ m.name ?? m.userId }}</span>
+          <span class="chat__msg-time tape">{{ formatTime(m.at) }}</span>
+        </header>
+        <p class="chat__msg-body">{{ m.text }}</p>
+      </article>
+    } @empty {
+      <p class="chat__empty serif">— silence —</p>
+    }
+  </div>
+</section>

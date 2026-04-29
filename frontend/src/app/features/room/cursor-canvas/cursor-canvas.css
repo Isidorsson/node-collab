@@ -1,0 +1,203 @@
+:host {
+  display: block;
+  height: 100%;
+  position: relative;
+}
+
+.board {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  cursor: crosshair;
+  background:
+    radial-gradient(ellipse at 30% 20%, var(--bg-elev-2) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 90%, var(--bg-elev) 0%, transparent 60%),
+    var(--bg);
+}
+
+/* engineering-paper grid — finer than the global ambient grid */
+.board::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, var(--rule) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--rule) 1px, transparent 1px);
+  background-size: 32px 32px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* a faint amber crosshair at viewport center */
+.board__centerline::before,
+.board__centerline::after {
+  content: '';
+  position: absolute;
+  background: var(--accent-soft);
+  pointer-events: none;
+}
+.board__centerline::before {
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+}
+.board__centerline::after {
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+}
+
+/* axis callouts */
+.board__axis {
+  position: absolute;
+  display: flex;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+  pointer-events: none;
+  z-index: 1;
+}
+.board__axis--top {
+  top: 8px;
+  left: 16px;
+  right: 16px;
+  justify-content: space-between;
+}
+.board__axis--left {
+  left: 8px;
+  top: 36px;
+  bottom: 16px;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.board__axis-tick {
+  background: var(--bg);
+  padding: 0 4px;
+  border-radius: 2px;
+}
+
+/* registration-mark corners */
+.board__corner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+}
+.board__corner--tl {
+  top: 24px;
+  left: 24px;
+  border-top: 1px solid var(--accent);
+  border-left: 1px solid var(--accent);
+}
+.board__corner--tr {
+  top: 24px;
+  right: 24px;
+  border-top: 1px solid var(--accent);
+  border-right: 1px solid var(--accent);
+}
+.board__corner--bl {
+  bottom: 24px;
+  left: 24px;
+  border-bottom: 1px solid var(--accent);
+  border-left: 1px solid var(--accent);
+}
+.board__corner--br {
+  bottom: 24px;
+  right: 24px;
+  border-bottom: 1px solid var(--accent);
+  border-right: 1px solid var(--accent);
+}
+
+.board__hint {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin: 0;
+  text-align: center;
+  pointer-events: none;
+  user-select: none;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  z-index: 1;
+  opacity: 0.7;
+}
+.board__hint .serif {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 28px;
+  text-transform: none;
+  letter-spacing: -0.01em;
+  color: var(--text-dim);
+  opacity: 0.7;
+  line-height: 1;
+}
+
+/* ---------------------------- cursor ---------------------------- */
+.board__cursor {
+  --cursor-hue: 200;
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  will-change: transform;
+  /* Snappy CSS interpolation between discrete socket events. 90ms is the
+     sweet spot — long enough to smooth jitter, short enough that a fast
+     drag still feels live. */
+  transition: transform 90ms cubic-bezier(0.2, 0.8, 0.3, 1);
+  z-index: 2;
+}
+
+.board__cursor-icon {
+  display: block;
+  width: 14px;
+  height: 14px;
+  fill: hsl(var(--cursor-hue), 75%, 65%);
+  filter: drop-shadow(0 0 6px hsla(var(--cursor-hue), 80%, 60%, 0.5));
+  stroke: var(--ink);
+  stroke-width: 1;
+}
+
+[data-theme='light'] .board__cursor-icon {
+  fill: hsl(var(--cursor-hue), 65%, 35%);
+  stroke: var(--bone);
+}
+
+.board__cursor-label {
+  display: inline-block;
+  margin-left: 14px;
+  margin-top: -4px;
+  padding: 2px 6px;
+  border-radius: 2px;
+  background: hsl(var(--cursor-hue), 70%, 25%);
+  color: hsl(var(--cursor-hue), 80%, 90%);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  border-left: 2px solid hsl(var(--cursor-hue), 75%, 60%);
+}
+
+[data-theme='light'] .board__cursor-label {
+  background: hsl(var(--cursor-hue), 80%, 92%);
+  color: hsl(var(--cursor-hue), 60%, 18%);
+  border-left-color: hsl(var(--cursor-hue), 60%, 35%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .board__cursor {
+    transition: none;
+  }
+}

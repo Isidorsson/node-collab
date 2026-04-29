@@ -1,0 +1,108 @@
+<article class="about">
+  <header class="about__head">
+    <p class="eyebrow"><span class="tick">▸</span> 03 / architecture</p>
+    <h2 class="serif">how a packet travels.</h2>
+  </header>
+
+  <section class="about__intro">
+    <p>
+      <em class="serif">node-collab</em> is the deliberate Node twin of a Go service of mine.
+      Same problem (multi-room realtime cursors + chat with presence), two
+      ecosystems, two sets of trade-offs. The point is the comparison.
+    </p>
+    <p>
+      Two replicas sit behind a Railway router. Each replica owns a
+      <code>Socket.IO</code> instance and shares fanout duties through a
+      <code>Redis</code> pub/sub channel. A message published on instance A is
+      delivered to clients connected to instance B without either knowing
+      about the other.
+    </p>
+  </section>
+
+  <section class="about__diagram" aria-label="System diagram">
+    <pre class="about__pre">
+                ┌──────────── instance A ────────────┐
+client A ───────│  Socket.IO  ←──── handlers ────────│──┐
+                │      ↑                              │  │
+                │      └── Redis adapter (pub/sub) ───│──┤
+                └─────────────────────────────────────┘  │
+                                                       Redis
+                ┌──────────── instance B ────────────┐  │
+client B ───────│  Socket.IO  ←──── handlers ────────│──┘
+                └─────────────────────────────────────┘
+    </pre>
+  </section>
+
+  <section class="about__cards">
+    <div class="about__card">
+      <p class="eyebrow"><span class="tick">▸</span> auth</p>
+      <h3 class="serif">jwt at the handshake.</h3>
+      <p>
+        Every socket presents a token in <code>auth</code>. The server's
+        <code>io.use()</code> middleware verifies it; without a valid sub
+        claim, the connection is rejected before any room.join.
+      </p>
+    </div>
+
+    <div class="about__card">
+      <p class="eyebrow"><span class="tick">▸</span> protocol</p>
+      <h3 class="serif">zod-validated payloads.</h3>
+      <p>
+        The five wire events — <code>room.join</code>, <code>room.leave</code>,
+        <code>chat</code>, <code>cursor</code>, <code>presence</code> — share
+        Zod schemas with the frontend's TypeScript types. Rename a field, the
+        compiler complains on both sides.
+      </p>
+    </div>
+
+    <div class="about__card">
+      <p class="eyebrow"><span class="tick">▸</span> backpressure</p>
+      <h3 class="serif">slow clients get evicted.</h3>
+      <p>
+        Cursor packets are emitted with <code>volatile</code>: if the
+        transport buffer is full, the frame is dropped, not queued. A separate
+        watcher tracks transport-stalled timeouts and disconnects clients that
+        can't keep up — exposed as the
+        <code>collab_slow_client_evictions_total</code> Prom metric.
+      </p>
+    </div>
+
+    <div class="about__card">
+      <p class="eyebrow"><span class="tick">▸</span> presence</p>
+      <h3 class="serif">redis hashes with ttl.</h3>
+      <p>
+        In Redis mode, each room is a hash <code>presence:&lt;room&gt;</code>
+        with a per-user TTL refresh. In memory mode (when REDIS_URL is unset),
+        a Map plays the same role. The same
+        <code>PresenceStore</code> interface fronts both.
+      </p>
+    </div>
+
+    <div class="about__card">
+      <p class="eyebrow"><span class="tick">▸</span> observability</p>
+      <h3 class="serif">prom-client over /metrics.</h3>
+      <p>
+        Active sockets, active rooms, messages
+        published / delivered, slow-client evictions — all exposed as Prom
+        counters and gauges, labeled by instance + channel.
+      </p>
+    </div>
+
+    <div class="about__card">
+      <p class="eyebrow"><span class="tick">▸</span> frontend</p>
+      <h3 class="serif">angular 20 standalone.</h3>
+      <p>
+        Signals for state, RxJS for event streams, a single typed
+        <code>CollabService</code> mediating the socket. Lazy-loaded routes,
+        OnPush change detection, no NgModules. Strict + strict-template
+        TypeScript across the board.
+      </p>
+    </div>
+  </section>
+
+  @if (snap(); as s) {
+    <footer class="about__foot tape">
+      ◆ live snapshot · instance={{ s.instance }} · mode={{ s.mode }} · status={{ s.status }}
+    </footer>
+  }
+</article>

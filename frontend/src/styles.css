@@ -1,0 +1,358 @@
+/* ============================================================
+   node-collab — "Observatory Console"
+   Dark, mono-precise, with an Instrument Serif italic as the
+   draftsman's signature on top.
+   ============================================================ */
+
+/* ---------- design tokens ---------- */
+:root {
+  color-scheme: dark light;
+
+  /* type */
+  --font-display: 'Instrument Serif', 'Iowan Old Style', 'Georgia', serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace;
+  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* dark — default */
+  --ink: #0a0b0d;
+  --ink-2: #0f1115;
+  --ink-3: #14171d;
+  --ink-4: #1a1f27;
+  --rule: #1d2128;
+  --rule-strong: #2a313c;
+  --bone: #ebe5d6;
+  --bone-dim: #b9b3a4;
+  --bone-mute: #6b6960;
+  --shadow-mute: #4a4842;
+
+  --amber: #f5a52a;
+  --amber-soft: rgba(245, 165, 42, 0.14);
+  --amber-glow: rgba(245, 165, 42, 0.4);
+  --cyan: #5ac8d4;
+  --cyan-soft: rgba(90, 200, 212, 0.14);
+  --magenta: #e85d8a;
+  --magenta-soft: rgba(232, 93, 138, 0.14);
+  --green: #7dd9a3;
+
+  --bg: var(--ink);
+  --bg-elev: var(--ink-2);
+  --bg-elev-2: var(--ink-3);
+  --bg-elev-3: var(--ink-4);
+  --text: var(--bone);
+  --text-dim: var(--bone-dim);
+  --muted: var(--bone-mute);
+  --accent: var(--amber);
+  --accent-soft: var(--amber-soft);
+  --you: var(--amber);
+  --them: var(--cyan);
+  --danger: var(--magenta);
+  --success: var(--green);
+
+  /* geometry */
+  --grid: 8px;
+  --radius: 2px;
+  --radius-lg: 4px;
+  --tick: 6px;
+
+  /* shadow + glass */
+  --shadow-flat: 0 1px 0 rgba(255, 255, 255, 0.03);
+  --shadow-elev: 0 1px 0 rgba(255, 255, 255, 0.04), 0 18px 40px -22px rgba(0, 0, 0, 0.7);
+  --noise-opacity: 0.035;
+}
+
+[data-theme='light'] {
+  --ink: #f4ecda;
+  --ink-2: #ede4cf;
+  --ink-3: #e3d9c0;
+  --ink-4: #d8cdb1;
+  --rule: #d2c7a9;
+  --rule-strong: #b9ad8e;
+  --bone: #1a1814;
+  --bone-dim: #4a4842;
+  --bone-mute: #75726a;
+  --shadow-mute: #c8bd9f;
+
+  --amber: #b76b09;
+  --amber-soft: rgba(183, 107, 9, 0.14);
+  --amber-glow: rgba(183, 107, 9, 0.3);
+  --cyan: #1d6f7a;
+  --cyan-soft: rgba(29, 111, 122, 0.14);
+  --magenta: #b03061;
+  --magenta-soft: rgba(176, 48, 97, 0.14);
+  --green: #2c8455;
+
+  --noise-opacity: 0.05;
+  --shadow-elev: 0 1px 0 rgba(0, 0, 0, 0.04), 0 14px 30px -22px rgba(0, 0, 0, 0.18);
+}
+
+/* ---------- reset ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font: 13px/1.55 var(--font-mono);
+  font-feature-settings: 'ss02', 'ss03', 'cv11';
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  overflow: hidden;
+  position: relative;
+}
+
+/* ambient layer — dimension grid + film grain  */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(to right, var(--rule) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--rule) 1px, transparent 1px);
+  background-size: 80px 80px;
+  background-position: -1px -1px;
+  opacity: 0.4;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: var(--noise-opacity);
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.9'/></svg>");
+}
+
+nc-root {
+  position: relative;
+  z-index: 1;
+  display: block;
+  height: 100%;
+}
+
+/* ---------- typography primitives ---------- */
+.serif {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.eyebrow .tick {
+  color: var(--accent);
+  margin-right: 0.5ch;
+}
+
+.tape {
+  font-family: var(--font-mono);
+  font-feature-settings: 'tnum';
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+}
+
+/* ---------- shared form primitives ---------- */
+button {
+  font: inherit;
+  cursor: pointer;
+  background: transparent;
+  color: inherit;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  padding: 6px 14px;
+  letter-spacing: 0.04em;
+  transition:
+    background 120ms ease,
+    color 120ms ease,
+    border-color 120ms ease;
+}
+button:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--ink);
+  font-weight: 600;
+}
+button.primary:hover:not(:disabled) {
+  background: var(--bone);
+  border-color: var(--bone);
+  color: var(--ink);
+}
+
+input,
+textarea {
+  font: inherit;
+  background: transparent;
+  color: var(--text);
+  border: none;
+  border-bottom: 1px solid var(--rule-strong);
+  border-radius: 0;
+  padding: 6px 0;
+  outline: none;
+  transition: border-color 120ms ease;
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--muted);
+  font-style: italic;
+}
+input:focus,
+textarea:focus {
+  border-bottom-color: var(--accent);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--accent);
+  padding-bottom: 1px;
+}
+a:hover {
+  color: var(--bone);
+  border-bottom-color: var(--bone);
+}
+
+:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: var(--radius);
+}
+
+::selection {
+  background: var(--amber-soft);
+  color: var(--bone);
+}
+
+/* ---------- boot splash ---------- */
+.app-boot {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 18px;
+  background: var(--bg);
+  animation: app-boot-fade 600ms ease 1200ms forwards;
+}
+
+.app-boot__rail {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.app-boot__tick {
+  color: var(--accent);
+}
+.app-boot__sep {
+  color: var(--rule-strong);
+}
+.app-boot__sweep {
+  display: inline-block;
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  animation: app-boot-sweep 1.4s linear infinite;
+}
+.app-boot__title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 56px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--bone);
+}
+.app-boot__sub {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+@keyframes app-boot-sweep {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  20%,
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+@keyframes app-boot-fade {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-boot__sweep {
+    animation: none;
+    opacity: 0.5;
+  }
+  .app-boot {
+    animation: none;
+  }
+}
+
+/* ---------- utility: hairline rule ---------- */
+.rule-h {
+  height: 1px;
+  background: var(--rule);
+}
+.rule-v {
+  width: 1px;
+  background: var(--rule);
+}
+
+/* ---------- utility: tick mark ---------- */
+.tick-mark::before {
+  content: '';
+  display: inline-block;
+  width: var(--tick);
+  height: 1px;
+  background: var(--accent);
+  vertical-align: middle;
+  margin-right: 0.5ch;
+}
