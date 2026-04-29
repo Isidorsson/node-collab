@@ -115,11 +115,16 @@
 
 .room__side-block {
   min-height: 0;
+  min-width: 0;
 }
 .room__side-block--chat {
   display: flex;
   flex-direction: column;
   min-height: 0;
+  min-width: 0;
+  /* Anchors `nc-chat-log`'s absolute fill (see chat-log.css). */
+  position: relative;
+  overflow: hidden;
 }
 
 .room__side-rule {

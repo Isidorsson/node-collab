@@ -258,9 +258,26 @@
 }
 
 .content {
+  /* Flex column with `min-height: 0` is the most robust full-height
+     container — children with `flex: 1` get an authoritative bounded
+     height, unlike `height: 100%` chains that can break when an
+     ancestor's height is grid-determined. */
   position: relative;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   min-height: 0;
+  min-width: 0;
+}
+
+.content > router-outlet {
+  display: none;
+}
+
+.content > :not(router-outlet) {
+  flex: 1 1 0;
+  min-height: 0;
+  min-width: 0;
 }
 
 /* ------------------------------ responsive ------------------------------ */

@@ -1,20 +1,20 @@
 :host {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  height: 100%;
-}
-
-.chat {
+  /* Absolutely positioned fill of the parent panel. This is the only
+     pattern that *cannot* be pushed taller by content, no matter how
+     fragile the upstream height chain is — the parent's bounding box is
+     the cap, full stop. The parent (`.room__side-block--chat`) sets
+     `position: relative` + `overflow: hidden` to anchor and clip. */
+  position: absolute;
+  inset: 0;
   display: grid;
-  /* `minmax(0, 1fr)` so the log row can collapse and let `overflow-y: auto`
-     on `.chat__log` actually scroll, instead of the messages pushing
-     the rail (and the whole UI) taller. */
   grid-template-rows: auto minmax(0, 1fr);
   gap: 12px;
   min-height: 0;
   min-width: 0;
-  flex: 1;
+}
+
+.chat {
+  display: contents;
 }
 
 .chat__head {
