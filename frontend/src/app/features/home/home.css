@@ -64,9 +64,9 @@
 
 .lobby__copy {
   font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: 1.6;
-  max-width: 52ch;
+  font-size: 15px;
+  line-height: 1.7;
+  max-width: 56ch;
   color: var(--text-dim);
   margin: 0;
 }

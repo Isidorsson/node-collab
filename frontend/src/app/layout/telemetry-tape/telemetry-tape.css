@@ -1,24 +1,38 @@
 :host {
   display: block;
+  /* Critical: lets the tape shrink inside its parent grid track, otherwise
+     its intrinsic width forces the whole topbar wider than the viewport
+     and the body's overflow:hidden clips the right edge of the page. */
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: 999px;
 }
 
 .tape-strip {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 10px;
+  padding: 6px 12px;
   border: 1px solid var(--rule-strong);
   border-radius: 999px;
   background: var(--bg-elev);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   font-feature-settings: 'tnum';
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.04em;
   color: var(--text-dim);
   white-space: nowrap;
   position: relative;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.tape-strip::-webkit-scrollbar {
+  display: none;
 }
 
 /* a long, near-imperceptible scanline travels left-to-right, hinting "live" */
@@ -95,7 +109,7 @@
 }
 
 .tape-strip__label {
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--muted);
@@ -103,6 +117,7 @@
 .tape-strip__value {
   color: var(--text);
   font-weight: 500;
+  font-size: 12px;
 }
 
 .tape-strip__frame[data-tone='accent'] .tape-strip__value {

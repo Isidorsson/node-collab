@@ -210,24 +210,34 @@
   display: grid;
   grid-template-rows: auto 1fr;
   min-width: 0;
+  min-height: 0;
   height: 100%;
+  overflow: hidden;
 }
 
 .topbar {
-  padding: 22px 28px 10px;
+  padding: 22px 28px 14px;
   display: grid;
-  grid-template-columns: 1fr auto;
+  /* minmax(0, ...) lets both columns shrink below their content's intrinsic
+     width — without it, the telemetry tape's nowrap content blows out the
+     layout and clips the right edge of the page. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, auto);
   gap: 24px;
   align-items: end;
   border-bottom: 1px solid var(--rule);
   background:
     linear-gradient(180deg, var(--bg) 0%, var(--bg-elev) 100%),
     var(--bg);
+  min-width: 0;
 }
 
 .topbar__title {
   display: grid;
   gap: 8px;
+  min-width: 0;
+}
+.topbar__title h1 {
+  overflow-wrap: anywhere;
 }
 .topbar__title h1 {
   margin: 0;

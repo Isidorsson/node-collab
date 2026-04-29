@@ -29,54 +29,36 @@
 
 .about__intro {
   display: grid;
-  gap: 12px;
+  gap: 14px;
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.7;
   color: var(--text-dim);
-  max-width: 60ch;
+  max-width: 62ch;
+}
+.about__intro p {
+  margin: 0;
 }
 .about__intro em.serif {
   color: var(--bone);
-  font-size: 16px;
+  font-size: 17px;
 }
 .about__intro code {
   background: var(--bg-elev-2);
-  padding: 0 6px;
+  padding: 1px 6px;
   border-radius: 2px;
   color: var(--accent);
-  font-size: 12px;
+  font-size: 13px;
   font-family: var(--font-mono);
 }
 
-.about__diagram {
-  background: var(--bg-elev);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  padding: 18px;
-  position: relative;
-  overflow-x: auto;
-}
-.about__diagram::before {
-  content: '── ARCHITECTURE.txt ──';
-  position: absolute;
-  top: -10px;
-  left: 18px;
-  background: var(--bg);
-  padding: 2px 8px;
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.18em;
+.about__diagram-caption {
+  margin: -8px 0 0;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.7;
   color: var(--muted);
-  text-transform: uppercase;
-}
-.about__pre {
-  margin: 0;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  line-height: 1.4;
-  color: var(--text-dim);
-  white-space: pre;
+  max-width: 62ch;
 }
 
 .about__cards {
@@ -127,8 +109,8 @@
 .about__card p:not(.eyebrow) {
   margin: 0;
   font-family: var(--font-sans);
-  font-size: 13px;
-  line-height: 1.6;
+  font-size: 14px;
+  line-height: 1.65;
   color: var(--text-dim);
 }
 .about__card code {

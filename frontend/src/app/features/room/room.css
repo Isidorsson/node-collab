@@ -80,25 +80,31 @@
 /* ---------------------------- layout ---------------------------- */
 .room__layout {
   display: grid;
-  grid-template-columns: 1fr 360px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 380px);
   min-height: 0;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .room__canvas {
   position: relative;
   border-right: 1px solid var(--rule);
   min-height: 0;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .room__side {
   display: grid;
-  grid-template-rows: auto auto 1fr auto;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
   padding: 20px 22px;
   gap: 16px;
   min-height: 0;
+  min-width: 0;
   background:
     linear-gradient(180deg, transparent 0%, var(--bg-elev) 100%),
     var(--bg);
+  overflow: hidden;
 }
 
 .room__side-block {

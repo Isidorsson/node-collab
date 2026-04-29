@@ -19,19 +19,13 @@
     </p>
   </section>
 
-  <section class="about__diagram" aria-label="System diagram">
-    <pre class="about__pre">
-                ┌──────────── instance A ────────────┐
-client A ───────│  Socket.IO  ←──── handlers ────────│──┐
-                │      ↑                              │  │
-                │      └── Redis adapter (pub/sub) ───│──┤
-                └─────────────────────────────────────┘  │
-                                                       Redis
-                ┌──────────── instance B ────────────┐  │
-client B ───────│  Socket.IO  ←──── handlers ────────│──┘
-                └─────────────────────────────────────┘
-    </pre>
-  </section>
+  <nc-architecture-diagram aria-label="System diagram" />
+
+  <p class="about__diagram-caption">
+    Two replicas behind a router; each owns its sockets but shares fanout
+    duties through Redis. A message published on instance A is delivered to
+    clients connected to instance B without either knowing about the other.
+  </p>
 
   <section class="about__cards">
     <div class="about__card">

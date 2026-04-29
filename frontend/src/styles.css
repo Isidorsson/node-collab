@@ -99,8 +99,9 @@ body {
   height: 100%;
   background: var(--bg);
   color: var(--text);
-  font: 13px/1.55 var(--font-mono);
-  font-feature-settings: 'ss02', 'ss03', 'cv11';
+  /* sans for prose comfort; mono is opted into explicitly on labels, codes,
+     telemetry, inputs etc. — see `.eyebrow`, `.tape`, `code`, etc. */
+  font: 15px/1.6 var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -176,9 +177,17 @@ nc-root {
   color: var(--text-dim);
 }
 
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-mono);
+}
+
 /* ---------- shared form primitives ---------- */
 button {
-  font: inherit;
+  font-family: var(--font-mono);
+  font-size: 13px;
   cursor: pointer;
   background: transparent;
   color: inherit;
@@ -213,7 +222,8 @@ button.primary:hover:not(:disabled) {
 
 input,
 textarea {
-  font: inherit;
+  font-family: var(--font-mono);
+  font-size: 14px;
   background: transparent;
   color: var(--text);
   border: none;
