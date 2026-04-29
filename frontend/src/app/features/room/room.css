@@ -84,9 +84,15 @@
 /* ---------------------------- layout ---------------------------- */
 .room__layout {
   display: grid;
-  /* Fixed-width chat rail. The `1fr` canvas absorbs all viewport flex,
-     while the rail stays at a comfortable reading column (~50ch of mono). */
-  grid-template-columns: minmax(0, 1fr) var(--chat-rail-w, 420px);
+  /* Viewport-scaling chat rail.
+       - Floor 420px so the column never collapses below readable width
+       - Preferred 38vw (≈730px on a 1920 monitor, ≈540px on a 1440 laptop)
+       - Ceiling 880px so it doesn't dwarf the canvas on ultrawides
+     `clamp()` does the responsive ramp in one declaration — no media
+     queries needed for the chat width itself. */
+  grid-template-columns:
+    minmax(0, 1fr)
+    var(--chat-rail-w, clamp(420px, 38vw, 880px));
   min-height: 0;
   min-width: 0;
   overflow: hidden;
@@ -140,12 +146,6 @@
 
 .room__side-composer {
   margin-top: auto;
-}
-
-@media (max-width: 1180px) {
-  .room__layout {
-    --chat-rail-w: 360px;
-  }
 }
 
 @media (max-width: 880px) {
