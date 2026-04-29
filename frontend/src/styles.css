@@ -146,6 +146,22 @@ nc-root {
   height: 100%;
 }
 
+/* ---------- shell content fill ----------
+   Lives in global CSS (not shell.css) on purpose: Angular's emulated
+   view encapsulation rewrites every selector in shell.css with the
+   shell's `[_ngcontent-…]` attribute, but `<router-outlet>` and the
+   rendered route component are projected through `<ng-content>` and
+   carry the *parent's* encapsulation attribute. From shell.css the
+   descendant selectors silently never match. From here they do. */
+.content > router-outlet {
+  display: none;
+}
+.content > :not(router-outlet) {
+  flex: 1 1 0;
+  min-height: 0;
+  min-width: 0;
+}
+
 /* ---------- typography primitives ---------- */
 .serif {
   font-family: var(--font-display);
