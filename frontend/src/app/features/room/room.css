@@ -7,11 +7,25 @@
   display: grid;
   /* `minmax(0, 1fr)` (not bare `1fr`) is the load-bearing piece here:
      it lets the layout row collapse, so a long chat log scrolls inside
-     its panel instead of pushing the canvas taller. */
+     its panel instead of pushing the canvas taller.
+     Children are pinned to explicit rows below — without that, when the
+     error block is absent (the common case), grid auto-placement drops
+     `.room__layout` into row 2 (auto) instead of row 3 (1fr), and the
+     whole layout collapses to content height. */
   grid-template-rows: auto auto minmax(0, 1fr);
   height: 100%;
   min-height: 0;
   overflow: hidden;
+}
+
+.room__head {
+  grid-row: 1;
+}
+.room__error {
+  grid-row: 2;
+}
+.room__layout {
+  grid-row: 3;
 }
 
 /* ---------------------------- head ---------------------------- */
