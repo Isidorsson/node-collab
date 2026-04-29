@@ -7,9 +7,13 @@
 
 .chat {
   display: grid;
-  grid-template-rows: auto 1fr;
+  /* `minmax(0, 1fr)` so the log row can collapse and let `overflow-y: auto`
+     on `.chat__log` actually scroll, instead of the messages pushing
+     the rail (and the whole UI) taller. */
+  grid-template-rows: auto minmax(0, 1fr);
   gap: 12px;
   min-height: 0;
+  min-width: 0;
   flex: 1;
 }
 

@@ -208,7 +208,9 @@
 /* ------------------------------ canvas ------------------------------ */
 .canvas {
   display: grid;
-  grid-template-rows: auto 1fr;
+  /* `minmax(0, 1fr)` so the content row can collapse — without it, an
+     overflowing room layout would push the canvas past 100% height. */
+  grid-template-rows: auto minmax(0, 1fr);
   min-width: 0;
   min-height: 0;
   height: 100%;
