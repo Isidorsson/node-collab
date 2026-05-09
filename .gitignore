@@ -12,3 +12,4 @@ coverage/
 public/browser/
 frontend/.angular/
 frontend/dist/
+public
